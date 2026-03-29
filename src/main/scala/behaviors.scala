@@ -3,7 +3,6 @@ package edu.luc.cs.laufer.cs371.expressions
 import util.Try
 
 import Expr.*
-import Stmt.*
 
 object behaviors:
 
@@ -25,24 +24,24 @@ object behaviors:
   def evaluate(e: Expr): Try[Int] = Try(evaluateR(e))
 
   def size(e: Expr): Int = e match
-    case Constant(_)   => 1
-    case Variable(_)   => 1
-    case UMinus(r)     => 1 + size(r)
-    case Plus(l, r)    => 1 + size(l) + size(r)
-    case Minus(l, r)   => 1 + size(l) + size(r)
-    case Times(l, r)   => 1 + size(l) + size(r)
-    case Div(l, r)     => 1 + size(l) + size(r)
-    case Mod(l, r)     => 1 + size(l) + size(r)
+    case Constant(_) => 1
+    case Variable(_) => 1
+    case UMinus(r)   => 1 + size(r)
+    case Plus(l, r)  => 1 + size(l) + size(r)
+    case Minus(l, r) => 1 + size(l) + size(r)
+    case Times(l, r) => 1 + size(l) + size(r)
+    case Div(l, r)   => 1 + size(l) + size(r)
+    case Mod(l, r)   => 1 + size(l) + size(r)
 
   def height(e: Expr): Int = e match
-    case Constant(_)   => 1
-    case Variable(_)   => 1
-    case UMinus(r)     => 1 + height(r)
-    case Plus(l, r)    => 1 + math.max(height(l), height(r))
-    case Minus(l, r)   => 1 + math.max(height(l), height(r))
-    case Times(l, r)   => 1 + math.max(height(l), height(r))
-    case Div(l, r)     => 1 + math.max(height(l), height(r))
-    case Mod(l, r)     => 1 + math.max(height(l), height(r))
+    case Constant(_) => 1
+    case Variable(_) => 1
+    case UMinus(r)   => 1 + height(r)
+    case Plus(l, r)  => 1 + math.max(height(l), height(r))
+    case Minus(l, r) => 1 + math.max(height(l), height(r))
+    case Times(l, r) => 1 + math.max(height(l), height(r))
+    case Div(l, r)   => 1 + math.max(height(l), height(r))
+    case Mod(l, r)   => 1 + math.max(height(l), height(r))
 
   import org.json4s.JsonAST.JValue
   import org.json4s.JsonDSL.*
@@ -79,6 +78,8 @@ object behaviors:
       ("Loop" ->
         ("condition" -> toJson(condition)) ~
         ("body" -> toJson(body)))
+    case b: Block =>
+      toJson(b)
 
   def toJson(b: Block): JValue =
     ("Block" -> b.statements.map(toJson))
@@ -110,10 +111,11 @@ object behaviors:
     case Assign(name, expr) =>
       s"${indent(depth)}$name = ${unparse(expr)};"
     case Cond(condition, thenBlock, elseBlock) =>
-      s"""${indent(depth)}if (${unparse(condition)}) ${unparse(thenBlock, depth)}
-${indent(depth)}else ${unparse(elseBlock, depth)}"""
+      s"${indent(depth)}if (${unparse(condition)}) ${unparse(thenBlock, depth)} else ${unparse(elseBlock, depth)}"
     case Loop(condition, body) =>
       s"${indent(depth)}while (${unparse(condition)}) ${unparse(body, depth)}"
+    case b: Block =>
+      s"${indent(depth)}${unparse(b, depth)}"
 
   def unparse(block: Block, depth: Int): String =
     if block.statements.isEmpty then

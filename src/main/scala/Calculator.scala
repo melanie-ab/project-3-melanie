@@ -17,7 +17,10 @@ object Calculator:
       program.foreach(println)
 
       println("The corresponding JSON structure is:")
-      println(pretty(render(toJson(Block(program)))))
+      if program.length == 1 then
+        println(pretty(render(toJson(program.head))))
+      else
+        println(pretty(render(toJson(Block(program)))))
 
       println("The unparsed statements are:")
       println(unparse(program))
