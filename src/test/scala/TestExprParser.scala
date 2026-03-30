@@ -7,7 +7,7 @@ class TestCombinatorParser extends AnyFunSuite:
   def parse(input: String) =
     ASTBuilder.parseAll(ASTBuilder.repl, input)
 
-  // ✅ Valid tests
+  // The valid tests
 
   test("assignment parses") {
     assert(parse("x = 5;").successful)
@@ -62,6 +62,13 @@ class TestCombinatorParser extends AnyFunSuite:
 
   test("while missing block fails") {
     assert(!parse("while (1) x = 2;").successful)
+  }
+    test("else if parses") {
+    assert(parse("if (1) { x = 2; } else if (3) { x = 4; }").successful)
+  }
+
+  test("else if else parses") {
+    assert(parse("if (1) { x = 2; } else if (3) { x = 4; } else { x = 5; }").successful)
   }
 
 end TestCombinatorParser
