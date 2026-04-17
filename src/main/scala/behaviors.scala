@@ -1,11 +1,11 @@
 package edu.luc.cs.laufer.cs371.expressions
 
 import util.Try
-
+import scala.collection.mutable
 import Expr.*
 
-object behaviors:
-
+enum Value derives CanEqual:
+  case Num(value: Int)
   // Expression evaluation only for now.
   // Variables are not interpreted yet in project 3a.
   private def evaluateR(e: Expr): Int = e match
